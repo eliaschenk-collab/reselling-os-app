@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Reselling OS</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Reselling OS">
+  <meta name="theme-color" content="#0f1115">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app"><p style="padding:24px;font:16px -apple-system,sans-serif;color:#888">Lade Reselling OS …</p></div>
+  <dialog id="dlg"></dialog>
+  <div id="toast" role="status" aria-live="polite"></div>
+  <script>
+  (function () {
+    function show(msg) {
+      var a = document.getElementById("app");
+      if (!a) return;
+      if (!a.getAttribute("data-err")) { a.setAttribute("data-err", "1"); a.innerHTML = '<div style="padding:24px;font:15px/1.5 -apple-system,sans-serif;color:#e5484d;word-break:break-word"><b>Fehler beim Start</b></div>'; }
+      a.firstChild.insertAdjacentHTML("beforeend", "<br>" + String(msg).replace(/[<>&]/g, ""));
+    }
+    window.addEventListener("error", function (e) {
+      var t = e.target;
+      if (t && t.tagName === "SCRIPT") return show("Datei konnte nicht geladen werden: " + (t.src || "").split("?")[0]);
+      show((e.message || "Fehler") + " (" + String(e.filename || "").split("/").pop() + ":" + (e.lineno || "") + ")");
+    }, true);
+    window.addEventListener("unhandledrejection", function (e) {
+      show("Fehler: " + ((e.reason && e.reason.message) || e.reason));
+    });
+  })();
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
